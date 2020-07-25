@@ -21,7 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
-#include "dma.h"
+//#include "dma.h"
 #include "tim.h"
 #include "gpio.h"
 
@@ -89,7 +89,9 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
+
+  //MX_DMA_Init();
+
   MX_ADC_Init();
   MX_TIM3_Init();
   MX_TIM17_Init();
@@ -110,7 +112,6 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  GPIO_Blink();
 	  TempRead = NTC_read(1);
-	   TempRead+= 2.0;
   }
   /* USER CODE END 3 */
 }
