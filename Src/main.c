@@ -101,7 +101,6 @@ int main(void)
   ADC_StartMeas();
   TIM_SetGenFreq(1000);
   /* USER CODE END 2 */
-
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
