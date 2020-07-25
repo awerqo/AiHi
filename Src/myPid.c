@@ -1,6 +1,9 @@
+#include "adc.h"
 #include "myPid.h"
-#include "math.h"
+#include "tim.h"
+#include <math.h>
 #include <stdint.h>
+#include <stdlib.h>
 /*
 PID PERIOD TIME IN MAIN FILE (CONST VALUE IN HEADER, BASING ON TIMER INTERRUPT)!
 PID KOEFFICENT IN THIS FILE IN PID REGULATOR FUNCTION
@@ -60,7 +63,6 @@ const float termistor[43][3] = {
 float NTC_read(unsigned char termPosition)
 {
 
-  uint32_t all_summ = 0;
   float result = 0;
 
   switch (termPosition)
@@ -85,7 +87,9 @@ float NTC_read(unsigned char termPosition)
     break;
   }
 
-  float resistance_ntc = 4095 - result / result; 
+  //float resistance_ntc = 4095 - result / result;
+  //float resistance_ntc = ((4095 - result) / (result)) * 1.0 + 0.0;
+  float resistance_ntc = ((result * 5.1) / (4095 - result)) * 1.0 + 0.0;
   float b25100RealCoef = resistance_ntc / 10.0;
   int i = 0;
   while (termistor[i][1] > b25100RealCoef)
@@ -134,12 +138,17 @@ char PidBigBlock(float SetTemp)
 
   if (vozdeistvie < 0)
     vozdeistvie = 0; // Output LIMITS (Lower SIDE)  max 1000
-  if (vozdeistvie >= 700)
-    vozdeistvie = 500; // Output LIMIT (Upper SIDE)   max 1000
+  if (vozdeistvie >= 1000)
+    vozdeistvie = 1000; // Output LIMIT (Upper SIDE)   max 1000
 
-  // vozdeystvie_proshloe = vozdeistvie;                        //
+ //vozdeystvie_proshloe = vozdeistvie;
 
-  int OgrINT = 150; // MAX error summ (Integral part)
+
+ //Max Tim is 48000
+ // TIM_SetPWMEnCounter(vozdeistvie*48);
+
+
+  int OgrINT = 250; // MAX error summ (Integral part)
   int OgrINTo = 0;  // LOW error summ (Integral part)
                     // int VozdPr = vozdeistvie;
 
@@ -147,11 +156,14 @@ char PidBigBlock(float SetTemp)
     Integralnoe_proshloe = OgrINT;
   if (Integralnoe_proshloe < OgrINTo)
     Integralnoe_proshloe = OgrINTo;
+
+
+
   // if (vozdeystvie_proshloe > VozdPr) vozdeystvie_proshloe = VozdPr;
 
   // peliter(1, 'n', (int)vozdeistvie);
   // peliter(2, 'n', (int)vozdeistvie);
-
+/*
   float module = 0.0;
   module = TemperatureBigBlockSet - TemperatureBigBlockReal;
   module = abs(module);
@@ -164,4 +176,5 @@ char PidBigBlock(float SetTemp)
   {
     return 'N';
   }
+  */
 }

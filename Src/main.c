@@ -27,7 +27,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "myPid.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,7 +58,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+volatile float TempRead = 0.0;
 /* USER CODE END 0 */
 
 /**
@@ -95,19 +95,22 @@ int main(void)
   MX_TIM17_Init();
   /* USER CODE BEGIN 2 */
   TIM_StartGeneration();
-  GPIO_EnableGen();
+ // GPIO_EnableGen();
   ADC_StartMeas();
   TIM_SetGenFreq(1000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 	  GPIO_Blink();
+	  TempRead = NTC_read(1);
+	   TempRead+= 2.0;
   }
   /* USER CODE END 3 */
 }
